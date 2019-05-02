@@ -1,5 +1,6 @@
 package com.example.sqllite49;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -34,6 +35,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
+
+    // lots of Alt+Insert for implementations
 
     /**
      * Called when the database is created for the first time. This is where the
@@ -77,6 +80,33 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // run on local device when a different DATABASE_VERSION is stated (eg after app upgrade)
         // https://stackoverflow.com/a/21881993/11365317
+        // delete existing db and then re-make (via onCreate)
+        String query = "DROP TABLE IF EXISTS " + TABLE_PRODUCTS;
+        db.execSQL(query);
+        onCreate(db);
+    }
+
+
+    // Add a new row to the database, with specified product
+    public void addProduct(Product product)
+    {
+        // ContentValues https://developer.android.com/reference/android/content/ContentValues
+        // ContentValues (from android.context) for get'ting and put'ting values from/to db
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCTNAME, product.get_productname());
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_PRODUCTS, null, values);
+        db.close();
+    }
+
+    // Delete a specified product from the database, using productname text
+    public void deleteProduct(String productname)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_PRODUCTS + " WHERE "
+                + COLUMN_PRODUCTNAME + " =\" " + productname + "\"";
+        db.execSQL(query);
     }
 
 }
