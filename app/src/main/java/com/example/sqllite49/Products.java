@@ -15,11 +15,13 @@ public class Products {
         this.productname = productname;
     }
 
+
+
     public int get_id() {
         return _id;
     }
 
-    public String getProductname() {
+    public String getproductname() {
         return productname;
     }
 
@@ -27,7 +29,7 @@ public class Products {
         this._id = _id;
     }
 
-    public void setProductname(String productname) {
+    public void setproductname(String productname) {
         this.productname = productname;
     }
 }

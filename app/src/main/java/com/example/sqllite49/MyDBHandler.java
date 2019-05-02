@@ -17,6 +17,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     // name of table(s) in db
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_PRODUCTNAME = "_productname";     // 1 line per column/field
+    // NB use these constants in code to be on the safe side/easy to alter
 
     /**
      * Create a helper object to create, open, and/or manage a database.
@@ -89,13 +90,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
 
     // Add a new row to the database, with specified product
-    public void addProduct(Product product)
+    public void addProduct(Products product)
     {
         // ContentValues https://developer.android.com/reference/android/content/ContentValues
         // ContentValues (from android.context) for get'ting and put'ting values from/to db
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PRODUCTNAME, product.get_productname());
+        values.put(COLUMN_PRODUCTNAME, product.getproductname());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_PRODUCTS, null, values);
         db.close();
@@ -106,7 +107,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = getWritableDatabase();
         String query = "DELETE FROM " + TABLE_PRODUCTS + " WHERE "
-                + COLUMN_PRODUCTNAME + " =\" " + productname + "\"";
+                + COLUMN_PRODUCTNAME + " =\"" + productname + "\"";
         db.execSQL(query);
     }
 
@@ -119,17 +120,22 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         // cursor, to point to a location in the results
         Cursor c = db.rawQuery(query, null);
+
         c.moveToFirst();
 
-        while(!c.isAfterLast())     // for every record ...
-        {
-            if (c.getString(c.getColumnIndex("productname"))!= null)
+        //if (!c.isLast())
+        //{
+            while (!c.isAfterLast())     // for every record ...
             {
-                dbResultString +=c.getString(c.getColumnIndex("productname"));
-                dbResultString += "\n";
-                // ... from (if valid data) productname field, concatenate values
+                if (c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME)) != null) {
+                    dbResultString += c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME));
+                    dbResultString += "\n";
+                    // ... from (if valid data) productname field, concatenate values
+                    // NB using COLUMN_PRODUCTNAME constant, not "_productname"
+                }
+                c.moveToNext();
             }
-        }
+        //}
         db.close();
         return dbResultString;
     }

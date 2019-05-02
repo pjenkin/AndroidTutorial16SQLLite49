@@ -8,8 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    EditText inputText;
+    TextView resultText;
+    MyDBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        inputText = findViewById(R.id.input_text);
+        resultText = findViewById(R.id.result_text);
+        dbHandler = new MyDBHandler(this, null, null,1);
+        // NB public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
+        printDatabase();
     }
 
     @Override
@@ -48,5 +60,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Print the database contents
+    public void printDatabase()
+    {
+        // fetch the db contents as a string
+        String dbString = dbHandler.databaseToString();
+        resultText.setText(dbString);
+        inputText.setText("");      // reset input box from current use, ready for next use
+    }
+
+    // Add a product record to the database
+    public void addButtonClicked(View view)     // NB remember the View view parameter
+    {
+        Products product = new Products(inputText.getText().toString());
+        dbHandler.addProduct(product);
+        printDatabase();        // show resulting db contents
+    }
+
+    public void deleteButtonClicked(View view)
+    {
+        String strProduct = inputText.getText().toString();
+        dbHandler.deleteProduct(strProduct);
+        printDatabase();        // show resulting db contents
     }
 }
