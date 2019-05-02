@@ -2,6 +2,7 @@ package com.example.sqllite49;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -107,6 +108,30 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String query = "DELETE FROM " + TABLE_PRODUCTS + " WHERE "
                 + COLUMN_PRODUCTNAME + " =\" " + productname + "\"";
         db.execSQL(query);
+    }
+
+    // Return (to print out) the database contetns as a string
+    public String databaseToString()
+    {
+        String dbResultString = "";
+        SQLiteDatabase db = getWritableDatabase();      // readable?
+        String query = "SELECT * FROM " + TABLE_PRODUCTS; // "WHERE TRUE" or "WHERE 1"
+
+        // cursor, to point to a location in the results
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+
+        while(!c.isAfterLast())     // for every record ...
+        {
+            if (c.getString(c.getColumnIndex("productname"))!= null)
+            {
+                dbResultString +=c.getString(c.getColumnIndex("productname"));
+                dbResultString += "\n";
+                // ... from (if valid data) productname field, concatenate values
+            }
+        }
+        db.close();
+        return dbResultString;
     }
 
 }
