@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         inputText = findViewById(R.id.input_text);
         resultText = findViewById(R.id.result_text);
         dbHandler = new MyDBHandler(this, null, null,1);
-        // NB public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
+        // NB signature: public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
         printDatabase();
     }
 

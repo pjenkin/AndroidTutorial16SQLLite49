@@ -123,21 +123,17 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         c.moveToFirst();
 
-        //if (!c.isLast())
-        //{
-            while (!c.isAfterLast())     // for every record ...
-            {
-                if (c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME)) != null) {
-                    dbResultString += c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME));
-                    dbResultString += "\n";
-                    // ... from (if valid data) productname field, concatenate values
-                    // NB using COLUMN_PRODUCTNAME constant, not "_productname"
-                }
-                c.moveToNext();
+        while (!c.isAfterLast())     // for every record ...
+        {
+            if (c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME)) != null) {
+                dbResultString += c.getString(c.getColumnIndex(COLUMN_PRODUCTNAME));
+                dbResultString += "\n";
+                // ... from (if valid data) productname field, concatenate values
+                // NB using COLUMN_PRODUCTNAME constant, not "_productname"
             }
-        //}
+            c.moveToNext();
+        }
         db.close();
         return dbResultString;
     }
-
 }
